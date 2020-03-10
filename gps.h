@@ -8,7 +8,11 @@ extern "C" {
   #include <ring_buffer.h>
 }
 
-#define GPS_WORKING_BUFFER_SIZE 128
+// Useful info about nmea communicates:
+//   - http://aprs.gids.nl/nmea/#gll
+//   - http://aprs.gids.nl/nmea
+
+#define GPS_WORKING_BUFFER_SIZE 500
 
 //Fix
 #define GPS_NO_FIX 0

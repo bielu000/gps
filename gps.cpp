@@ -34,6 +34,7 @@ static void __gps_parse_gpgga(gps_handle_t gps);
 static void __gps_parse_gpgsa(gps_handle_t gps);
 static void __gps_parse_gpgsv(gps_handle_t gps);
 static void __gps_parse_gpgll(gps_handle_t gps);
+static void __gps_load_next_line(gps_handle_t gps);
 
 static uint8_t working_buffer_data[GPS_WORKING_BUFFER_SIZE];
 
@@ -88,6 +89,7 @@ void gps_task(gps_handle_t gps)
   if (gps->lines_of_data)
   {
     __gps_parse_line(gps);
+    __gps_load_next_line(gps);
   }
 }
 
@@ -96,7 +98,19 @@ void __gps_parse_line(gps_handle_t gps)
 {
   rbuff_handle_t rbuff_h = &gps->working_buffer;
 
-  char* token = strtoke((char*)rbuff_h->data, ",");
+  char* token;
+  char* bufptr = (char*)&(rbuff_h->data[ring_buffer_tail(rbuff_h)]);
+  token = strtoke(bufptr, DELIMITER);
+
+  char c1 = rbuff_h->data[ring_buffer_tail(rbuff_h)];
+  char c2 = rbuff_h->data[ring_buffer_tail(rbuff_h) + 1];
+  char c3 = rbuff_h->data[ring_buffer_tail(rbuff_h) + 2];
+  char c4 = rbuff_h->data[ring_buffer_tail(rbuff_h) + 3];
+  char c5 = rbuff_h->data[ring_buffer_tail(rbuff_h) + 4];
+  char c6 = rbuff_h->data[ring_buffer_tail(rbuff_h) + 5];
+  char c7 = rbuff_h->data[ring_buffer_tail(rbuff_h) + 6];
+  char c8 = rbuff_h->data[ring_buffer_tail(rbuff_h) + 7];
+  char c9 = rbuff_h->data[ring_buffer_tail(rbuff_h) + 8];
 
   if (strcmp(token, "$GPRMC") == 0) __gps_parse_gprmc(gps);
   else if (strcmp(token, "$GPVTG") == 0) __gps_parse_gpvtg(gps);
@@ -104,6 +118,23 @@ void __gps_parse_line(gps_handle_t gps)
   else if (strcmp(token, "$GPGSA") == 0) __gps_parse_gpgsa(gps);
   else if (strcmp(token, "$GPGSV") == 0) __gps_parse_gpgsv(gps);
   else if (strcmp(token, "$GPGLL") == 0) __gps_parse_gpgll(gps);
+}
+
+void __gps_load_next_line(gps_handle_t gps)
+{
+  rbuff_t* rbuff = &gps->working_buffer;
+  uint8_t c = 0;
+
+
+
+  do {
+    ring_buffer_read(rbuff, &c);
+  } while(c != CR);
+
+
+  char* buff = (char*)&rbuff->data[rbuff->tail];
+
+  gps->lines_of_data--;
 }
 
 void __gps_parse_gprmc(gps_handle_t gps)
