@@ -88,3 +88,13 @@ inline void ring_buffer_clear(rbuff_handle_t rbufhandle)
     rbufhandle->data[0] = 0;
   }
 }
+
+inline size_t ring_buffer_head(rbuff_handle_t rbuffhandle)
+{
+  return rbuffhandle->head;
+}
+
+inline size_t ring_buffer_tail(rbuff_handle_t rbuffhandle)
+{
+  return rbuffhandle->tail;
+}
