@@ -176,8 +176,6 @@ void __gps_parse_gpvtg(gps_handle_t gps)
   {
     gps->speed_kilomiters = atof(token);
   }
-
-  token = strtoke(NULL, DELIMITER);
 }
 
 void __gps_parse_gpgga(gps_handle_t gps)

@@ -8,20 +8,21 @@ extern "C" {
   #include <gps.h>
 }
 
-TEST(GpsTestSuite, TestInit)
-{
-  gps_t gps;
-  gps_init(&gps);
-
-  ASSERT_NE(gps.working_buffer.max, 0);
-}
-
 void fill_gps_data(gps_handle_t gps, const std::string& str)
 {
   for (auto const& s : str)
   {
     gps_receive_char(gps, s);
   }
+}
+
+
+TEST(GpsTestSuite, TestInit)
+{
+  gps_t gps;
+  gps_init(&gps);
+
+  ASSERT_NE(gps.working_buffer.max, 0);
 }
 
 TEST(GpsTestSuite, TestNoFixGPRMC)
@@ -143,8 +144,7 @@ TEST(GpsTestSuite, TestParseLines)
   std::vector<std::string> p {
     "$GPRMC,225446,A,4916.45,N,12311.12,W,000.5,054.7,191194,020.3,E*68\r\n",
     "$GPVTG,054.7,T,034.4,M,005.5,N,010.2,K\r\n",
-    "$GPGGA,34658.00,5106.9792,N,11402.3003,W,2,09,1.0,1048.47,M,-16.27,M,08,AAAA*60\r\n",
-    "$GPGC, 1231, 123"
+    "$GPGGA,34658.00,5106.9792,N,11402.3003,W,2,09,1.0,1048.47,M,-16.27,M,08,AAAA*60\r\n"
   };
 
   gps_t gps;
@@ -158,7 +158,9 @@ TEST(GpsTestSuite, TestParseLines)
     }
   }
 
-  char* ddd = (char*)gps.working_buffer.data;
+  const char* s1 = (char*)&gps.working_buffer.data[0];
+  const char* s2 = (char*)&gps.working_buffer.data[67];
+  const char* s3 = (char*)&gps.working_buffer.data[106];
 
   //Assert GPRMC
   gps_task(&gps);
