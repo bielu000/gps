@@ -102,16 +102,6 @@ void __gps_parse_line(gps_handle_t gps)
   char* bufptr = (char*)&(rbuff_h->data[ring_buffer_tail(rbuff_h)]);
   token = strtoke(bufptr, DELIMITER);
 
-  char c1 = rbuff_h->data[ring_buffer_tail(rbuff_h)];
-  char c2 = rbuff_h->data[ring_buffer_tail(rbuff_h) + 1];
-  char c3 = rbuff_h->data[ring_buffer_tail(rbuff_h) + 2];
-  char c4 = rbuff_h->data[ring_buffer_tail(rbuff_h) + 3];
-  char c5 = rbuff_h->data[ring_buffer_tail(rbuff_h) + 4];
-  char c6 = rbuff_h->data[ring_buffer_tail(rbuff_h) + 5];
-  char c7 = rbuff_h->data[ring_buffer_tail(rbuff_h) + 6];
-  char c8 = rbuff_h->data[ring_buffer_tail(rbuff_h) + 7];
-  char c9 = rbuff_h->data[ring_buffer_tail(rbuff_h) + 8];
-
   if (strcmp(token, "$GPRMC") == 0) __gps_parse_gprmc(gps);
   else if (strcmp(token, "$GPVTG") == 0) __gps_parse_gpvtg(gps);
   else if (strcmp(token, "$GPGGA") == 0) __gps_parse_gpgga(gps);
